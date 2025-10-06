@@ -18,15 +18,37 @@ function updateClock() {
     const s1 = Math.floor(seconds / 10);
     const s2 = seconds % 10;
 
-    // Update the DOM
-    document.querySelector('#hour1 .flip-card-face').textContent = h1;
-    document.querySelector('#hour2 .flip-card-face').textContent = h2;
-    document.querySelector('#min1 .flip-card-face').textContent = m1;
-    document.querySelector('#min2 .flip-card-face').textContent = m2;
-    document.querySelector('#sec1 .flip-card-face').textContent = s1;
-    document.querySelector('#sec2 .flip-card-face').textContent = s2;
+    // Call the flip function for each digit if it has changed
+    flip(document.getElementById('hour1'), h1);
+    flip(document.getElementById('hour2'), h2);
+    flip(document.getElementById('min1'), m1);
+    flip(document.getElementById('min2'), m2);
+    flip(document.getElementById('sec1'), s1);
+    flip(document.getElementById('sec2'), s2);
+
     document.getElementById('period').textContent = period;
 }
+
+// Flip function to animate the cards
+function flip(card, newNumber) {
+    const front = card.querySelector('.flip-card-front');
+    const back = card.querySelector('.flip-card-back');
+    const currentNumber = parseInt(front.textContent);
+
+    if (currentNumber === newNumber) {
+        return;
+    }
+
+    back.textContent = newNumber;
+    card.classList.add('flipped');
+
+    // Wait for the animation to complete before changing the front face
+    setTimeout(() => {
+        front.textContent = newNumber;
+        card.classList.remove('flipped');
+    }, 600); // This duration should match the transition speed in CSS
+}
+
 
 // Initial call to display the clock immediately
 updateClock();
@@ -63,5 +85,32 @@ document.addEventListener('fullscreenchange', () => {
     } else {
         fullscreenIcon.classList.remove('fa-compress');
         fullscreenIcon.classList.add('fa-expand');
+    }
+});
+
+// Zoom functionality with separate buttons and limits
+const zoomInBtn = document.getElementById('zoom-in-btn');
+const zoomOutBtn = document.getElementById('zoom-out-btn');
+const clockContainer = document.querySelector('.clock-container');
+
+let currentZoomLevel = 1.0;
+const zoomStep = 0.1;
+
+zoomInBtn.addEventListener('click', () => {
+    currentZoomLevel += zoomStep;
+    clockContainer.style.transform = `scale(${currentZoomLevel})`;
+});
+
+zoomOutBtn.addEventListener('click', () => {
+    if (currentZoomLevel > 1.0) {
+        currentZoomLevel -= zoomStep;
+        clockContainer.style.transform = `scale(${currentZoomLevel})`;
+    } else {
+        // Add shake animation if zoom-out limit is reached
+        clockContainer.classList.add('shake');
+        // Remove the shake class after the animation finishes
+        setTimeout(() => {
+            clockContainer.classList.remove('shake');
+        }, 300);
     }
 });

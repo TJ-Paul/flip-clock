@@ -7,6 +7,7 @@
 body {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: #1a1a1a;
@@ -18,6 +19,30 @@ body {
     display: flex;
     gap: 8px;
     align-items: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Shake animation */
+.shake {
+    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
 
 .digit-group {
@@ -54,34 +79,46 @@ body {
     transform-style: preserve-3d;
 }
 
-.flip-card-face {
+.flip-card-front, .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
     background: #2d2d2d;
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 80px;
     font-weight: 300;
     color: #e0e0e0;
-    backface-visibility: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+    backface-visibility: hidden;
 }
 
-.flip-card-face::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #1a1a1a;
-    transform: translateY(-1px);
+/* Hover effect */
+.flip-card:hover .flip-card-inner {
+    transform: translateY(-5px) scale(1.05);
 }
 
-.flip-card-face::after {
+.flip-card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+/* New CSS for the flip effect */
+.flipped .flip-card-front {
+    transform: rotateY(-180deg);
+}
+.flipped .flip-card-back {
+    transform: rotateY(0deg);
+}
+
+.flip-card-front::after, .flip-card-back::after {
     content: '';
     position: absolute;
     top: 0;
@@ -89,7 +126,7 @@ body {
     right: 0;
     height: 50%;
     background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
-    border-radius: 8px 8px 0 0;
+    border-radius: 12px 12px 0 0;
 }
 
 .period {
@@ -110,6 +147,36 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
+/* New CSS for the buttons */
+.button-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#fullscreen-btn, #zoom-in-btn, #zoom-out-btn {
+    background: #4a4a4a;
+    color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#fullscreen-btn:hover, #zoom-in-btn:hover, #zoom-out-btn:hover {
+    background: #6a6a6a;
+}
+
 /* Mobile Vertical Layout */
 @media (max-width: 768px) {
     .clock-container {
@@ -118,7 +185,6 @@ body {
     }
     
     .separator, .period {
-        /* Hide separators and re-position period */
         display: none; 
     }
 
@@ -136,7 +202,7 @@ body {
     }
     
     .period {
-        display: block; /* Make the period visible again */
+        display: block;
         margin-left: 0;
         text-align: center;
         margin-top: 20px;
@@ -148,37 +214,7 @@ body {
         width: fit-content;
         margin: auto;
     }
-}
-/* New CSS for the button */
-.button-container {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-}
 
-#fullscreen-btn {
-    background: #4a4a4a;
-    color: #e0e0e0;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 20px; /* Adjust font size for the icon */
-    cursor: pointer;
-    transition: background 0.3s ease;
-    width: 50px; /* Give the button a fixed size */
-    height: 50px;
-    display: flex; /* Use flexbox to center the icon */
-    justify-content: center;
-    align-items: center;
-}
-
-#fullscreen-btn:hover {
-    background: #6a6a6a;
-}
-
-/* Existing media queries... */
-@media (max-width: 768px) {
-    /* Existing mobile styles... */
     .button-container {
         bottom: 10px;
         right: 10px;
