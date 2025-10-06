@@ -36,14 +36,13 @@ setInterval(updateClock, 1000);
 
 // Fullscreen functionality
 const fullscreenBtn = document.getElementById('fullscreen-btn');
+const fullscreenIcon = document.querySelector('#fullscreen-btn i');
 const docElem = document.documentElement;
 
 fullscreenBtn.addEventListener('click', () => {
     if (document.fullscreenElement) {
-        // Exit fullscreen mode
         document.exitFullscreen();
     } else {
-        // Request fullscreen mode
         if (docElem.requestFullscreen) {
             docElem.requestFullscreen();
         } else if (docElem.mozRequestFullScreen) {
@@ -56,11 +55,13 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-// Event listener to change button text when the fullscreen state changes
+// Event listener to change the icon when the fullscreen state changes
 document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) {
-        fullscreenBtn.textContent = 'Exit Fullscreen';
+        fullscreenIcon.classList.remove('fa-expand');
+        fullscreenIcon.classList.add('fa-compress');
     } else {
-        fullscreenBtn.textContent = 'Fullscreen';
+        fullscreenIcon.classList.remove('fa-compress');
+        fullscreenIcon.classList.add('fa-expand');
     }
 });

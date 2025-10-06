@@ -162,9 +162,14 @@ body {
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 20px; /* Adjust font size for the icon */
     cursor: pointer;
     transition: background 0.3s ease;
+    width: 50px; /* Give the button a fixed size */
+    height: 50px;
+    display: flex; /* Use flexbox to center the icon */
+    justify-content: center;
+    align-items: center;
 }
 
 #fullscreen-btn:hover {
