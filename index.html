@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="clock-container">
-        <div class="digit-group">
+        <div class="digit-group" id="hours-group">
             <div class="flip-card" id="hour1">
                 <div class="flip-card-inner">
                     <div class="flip-card-face">0</div>
@@ -26,7 +26,7 @@
             <div class="dot"></div>
         </div>
 
-        <div class="digit-group">
+        <div class="digit-group" id="minutes-group">
             <div class="flip-card" id="min1">
                 <div class="flip-card-inner">
                     <div class="flip-card-face">0</div>
@@ -44,7 +44,7 @@
             <div class="dot"></div>
         </div>
 
-        <div class="digit-group">
+        <div class="digit-group" id="seconds-group">
             <div class="flip-card" id="sec1">
                 <div class="flip-card-inner">
                     <div class="flip-card-face">0</div>
@@ -60,6 +60,10 @@
         <div class="period">
             <div class="period-text" id="period">PM</div>
         </div>
+    </div>
+    
+    <div class="button-container">
+        <button id="fullscreen-btn">Fullscreen</button>
     </div>
 
     <script src="script.js"></script>
