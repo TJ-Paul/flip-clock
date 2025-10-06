@@ -1,15 +1,15 @@
 function updateClock() {
-const now = new Date();
+    const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes();
     const seconds = now.getSeconds();
-    
+
     // Determine AM/PM period
     const period = hours >= 12 ? 'PM' : 'AM';
-    
+
     // Convert to 12-hour format
     hours = hours % 12 || 12;
-    
+
     // Calculate individual digits
     const h1 = Math.floor(hours / 10);
     const h2 = hours % 10;
@@ -17,7 +17,7 @@ const now = new Date();
     const m2 = minutes % 10;
     const s1 = Math.floor(seconds / 10);
     const s2 = seconds % 10;
-    
+
     // Update the DOM
     document.querySelector('#hour1 .flip-card-face').textContent = h1;
     document.querySelector('#hour2 .flip-card-face').textContent = h2;
@@ -34,47 +34,33 @@ updateClock();
 // Update the clock every second
 setInterval(updateClock, 1000);
 
-// New JavaScript for fullscreen functionality
+// Fullscreen functionality
 const fullscreenBtn = document.getElementById('fullscreen-btn');
 const docElem = document.documentElement;
 
 fullscreenBtn.addEventListener('click', () => {
-    if (docElem.requestFullscreen) {
-        docElem.requestFullscreen();
-        fullscreenBtn.textContent = 'Exit Fullscreen';
-    } else if (docElem.mozRequestFullScreen) { /* Firefox */
-        docElem.mozRequestFullScreen();
-        fullscreenBtn.textContent = 'Exit Fullscreen';
-    } else if (docElem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-        docElem.webkitRequestFullscreen();
-        fullscreenBtn.textContent = 'Exit Fullscreen';
-    } else if (docElem.msRequestFullscreen) { /* IE/Edge */
-        docElem.msRequestFullscreen();
-        fullscreenBtn.textContent = 'Exit Fullscreen';
+    if (document.fullscreenElement) {
+        // Exit fullscreen mode
+        document.exitFullscreen();
+    } else {
+        // Request fullscreen mode
+        if (docElem.requestFullscreen) {
+            docElem.requestFullscreen();
+        } else if (docElem.mozRequestFullScreen) {
+            docElem.mozRequestFullScreen();
+        } else if (docElem.webkitRequestFullscreen) {
+            docElem.webkitRequestFullscreen();
+        } else if (docElem.msRequestFullscreen) {
+            docElem.msRequestFullscreen();
+        }
     }
 });
 
-// Event listener to change button text when exiting fullscreen
+// Event listener to change button text when the fullscreen state changes
 document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-        fullscreenBtn.textContent = 'Fullscreen';
-    }
-});
-
-document.addEventListener('webkitfullscreenchange', () => {
-    if (!document.webkitFullscreenElement) {
-        fullscreenBtn.textContent = 'Fullscreen';
-    }
-});
-
-document.addEventListener('mozfullscreenchange', () => {
-    if (!document.mozFullScreenElement) {
-        fullscreenBtn.textContent = 'Fullscreen';
-    }
-});
-
-document.addEventListener('MSFullscreenChange', () => {
-    if (!document.msFullscreenElement) {
+    if (document.fullscreenElement) {
+        fullscreenBtn.textContent = 'Exit Fullscreen';
+    } else {
         fullscreenBtn.textContent = 'Fullscreen';
     }
 });
