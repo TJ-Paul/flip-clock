@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clock</title>
+    <title>Flip Clock</title>
     <style>
         * {
             margin: 0;
@@ -16,65 +16,206 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a1a1a;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             overflow: hidden;
         }
 
         .clock-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .digit-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .separator {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #4a4a4a;
+            border-radius: 50%;
+        }
+
+        .flip-card {
+            position: relative;
+            width: 80px;
+            height: 120px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #2d2d2d;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            font-weight: 300;
+            color: #e0e0e0;
+            backface-visibility: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .flip-card-face::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #1a1a1a;
+            transform: translateY(-1px);
+        }
+
+        .flip-card-face::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .period {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 10px;
+        }
+
+        .period-text {
+            font-size: 24px;
+            font-weight: 300;
+            color: #e0e0e0;
+            background: #2d2d2d;
+            padding: 8px 16px;
+            border-radius: 8px;
             text-align: center;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .time {
-            font-size: 5rem;
-            font-weight: 300;
-            color: white;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
-        }
-
-        .date {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-            letter-spacing: 0.1em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         @media (max-width: 768px) {
-            .time {
-                font-size: 3rem;
+            .flip-card {
+                width: 50px;
+                height: 75px;
             }
-            .date {
-                font-size: 1rem;
+            .flip-card-face {
+                font-size: 50px;
+            }
+            .dot {
+                width: 8px;
+                height: 8px;
+            }
+            .period-text {
+                font-size: 16px;
+                padding: 6px 12px;
             }
         }
     </style>
 </head>
 <body>
     <div class="clock-container">
-        <div class="time" id="time">00:00:00</div>
-        <div class="date" id="date">Loading...</div>
+        <div class="digit-group">
+            <div class="flip-card" id="hour1">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+            <div class="flip-card" id="hour2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="separator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <div class="digit-group">
+            <div class="flip-card" id="min1">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+            <div class="flip-card" id="min2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="separator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <div class="digit-group">
+            <div class="flip-card" id="sec1">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+            <div class="flip-card" id="sec2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-face">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="period">
+            <div class="period-text" id="period">PM</div>
+        </div>
     </div>
 
     <script>
         function updateClock() {
             const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
             
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
             
-            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+            const h1 = Math.floor(hours / 10);
+            const h2 = hours % 10;
+            const m1 = Math.floor(minutes / 10);
+            const m2 = minutes % 10;
+            const s1 = Math.floor(seconds / 10);
+            const s2 = seconds % 10;
             
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateStr = now.toLocaleDateString('en-US', options);
-            document.getElementById('date').textContent = dateStr;
+            document.querySelector('#hour1 .flip-card-face').textContent = h1;
+            document.querySelector('#hour2 .flip-card-face').textContent = h2;
+            document.querySelector('#min1 .flip-card-face').textContent = m1;
+            document.querySelector('#min2 .flip-card-face').textContent = m2;
+            document.querySelector('#sec1 .flip-card-face').textContent = s1;
+            document.querySelector('#sec2 .flip-card-face').textContent = s2;
+            document.getElementById('period').textContent = period;
         }
 
         updateClock();
